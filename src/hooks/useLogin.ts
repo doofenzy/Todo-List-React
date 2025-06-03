@@ -34,7 +34,8 @@ const useLogin = () => {
     },
     onSuccess: (data) => {
       setToken(data.token);
-      navigate('/');
+      console.log('Login successful, token set:', data.token);
+      navigate('/home');
     },
     onError: (error) => {
       const message =

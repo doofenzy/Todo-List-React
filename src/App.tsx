@@ -9,7 +9,7 @@ function App() {
     <div className="app-container">
       <Routes>
         <Route
-          path="/"
+          path="/home"
           element={
             <PrivateRoute>
               <Home />
