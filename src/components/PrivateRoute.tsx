@@ -1,16 +1,17 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { JSX } from 'react';
-import { Progress } from '../components/ui/progress';
+// import { Progress } from '../components/ui/progress';
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
-  if (isLoading) {
-    return <Progress value={33} />; // Or a spinner
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return <>{children}</>;
 };
 
 export default PrivateRoute;

@@ -33,9 +33,10 @@ const useLogin = () => {
       return res.data;
     },
     onSuccess: (data) => {
-      setToken(data.token);
-      console.log('Login successful, token set:', data.token);
-      navigate('/home');
+      setToken(data.token); // sessionStorage is set
+      setTimeout(() => {
+        navigate('/home'); // ✅ Works better in async flow
+      }, 0);
     },
     onError: (error) => {
       const message =
