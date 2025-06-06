@@ -33,10 +33,11 @@ const useLogin = () => {
       return res.data;
     },
     onSuccess: (data) => {
-      setToken(data.token); // sessionStorage is set
+      setToken(data.token);
+
       setTimeout(() => {
-        navigate('/home'); // ✅ Works better in async flow
-      }, 0);
+        navigate('/home');
+      }, 2000);
     },
     onError: (error) => {
       const message =
