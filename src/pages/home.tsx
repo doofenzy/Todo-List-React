@@ -17,16 +17,17 @@ import LogoutButton from '../components/LogoutButton.tsx';
 import useTodo from '../hooks/useTodo.ts';
 import LoadingScreen from '../components/LoadingScreen.tsx';
 import {
-  type Key,
   type ReactElement,
   type JSXElementConstructor,
   type ReactNode,
   type ReactPortal,
 } from 'react';
 import FormTodo from '../components/FormTodo.tsx';
+import useDeleteTodo from '../hooks/useDeleteTodo.ts';
 
 const Home = () => {
   const { data: todo, isLoading } = useTodo();
+  const deleteTodo = useDeleteTodo();
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -44,7 +45,7 @@ const Home = () => {
       <CardContent className="flex flex-col gap-4">
         {todo?.map(
           (item: {
-            _id: Key | null | undefined;
+            _id: string;
             title:
               | string
               | number
@@ -87,7 +88,7 @@ const Home = () => {
                 className="ml-auto h-8 w-8"
                 size="icon"
                 variant="outline"
-                // onClick={() => handleDelete(item._id)}
+                onClick={() => deleteTodo.mutate(item._id)}
               >
                 <TrashIcon className="h-4 w-4" />
                 <span className="sr-only">Delete task</span>

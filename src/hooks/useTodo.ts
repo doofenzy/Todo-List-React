@@ -6,10 +6,11 @@ const useTodo = () => {
     queryKey: ['todos'],
     queryFn: async () => {
       const res = await api.get('/todo');
+
       return res.data;
     },
     refetchOnWindowFocus: false,
-    retry: 1,
+    retry: false,
   });
 };
 
