@@ -13,91 +13,101 @@ import {
 } from '../components/ui/card';
 import { Checkbox } from '../components/ui/checkbox';
 import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
+import LogoutButton from '../components/LogoutButton.tsx';
+import useTodo from '../hooks/useTodo.ts';
+import LoadingScreen from '../components/LoadingScreen.tsx';
+import {
+  type Key,
+  type ReactElement,
+  type JSXElementConstructor,
+  type ReactNode,
+  type ReactPortal,
+} from 'react';
+import FormTodo from '../components/FormTodo.tsx';
 
 const Home = () => {
+  const { data: todo, isLoading } = useTodo();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <Card key="1" className="w-full max-w-lg mx-auto mt-20">
       <CardHeader>
-        <CardTitle className="text-2xl">To-Do List</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-2xl">To-Do List</CardTitle>
+          <LogoutButton />
+        </div>
         <CardDescription>Add new tasks to your to-do list</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <Checkbox
-            className="peer-absolute left-0 translate-x-2.5"
-            id="todo1"
-          />
-          <label
-            className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor="todo1"
-          >
-            Learn how to use Shadcn
-          </label>
-          <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-            <TrashIcon className="h-4 w-4" />
-            <span className="sr-only">Delete task</span>
-          </Button>
-        </div>
-        <div className="flex items-center gap-4">
-          <Checkbox
-            className="peer-absolute left-0 translate-x-2.5"
-            id="todo2"
-          />
-          <label
-            className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor="todo2"
-          >
-            Walk the dog
-          </label>
-          <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-            <TrashIcon className="h-4 w-4" />
-            <span className="sr-only">Delete task</span>
-          </Button>
-        </div>
-        <div className="flex items-center gap-4">
-          <Checkbox
-            className="peer-absolute left-0 translate-x-2.5"
-            id="todo3"
-          />
-          <label
-            className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor="todo3"
-          >
-            Buy groceries
-          </label>
-          <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-            <TrashIcon className="h-4 w-4" />
-            <span className="sr-only">Delete task</span>
-          </Button>
-        </div>
-        <div className="flex items-center gap-4">
-          <Checkbox
-            className="peer-absolute left-0 translate-x-2.5"
-            id="todo4"
-          />
-          <label
-            className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            htmlFor="todo4"
-          >
-            Complete the assignment
-          </label>
-          <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-            <TrashIcon className="h-4 w-4" />
-            <span className="sr-only">Delete task</span>
-          </Button>
-        </div>
+        {todo?.map(
+          (item: {
+            _id: Key | null | undefined;
+            title:
+              | string
+              | number
+              | bigint
+              | boolean
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              | ReactElement<unknown, string | JSXElementConstructor<any>>
+              | Iterable<ReactNode>
+              | ReactPortal
+              | Promise<
+                  | string
+                  | number
+                  | bigint
+                  | boolean
+                  | ReactPortal
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  | ReactElement<unknown, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | null
+                  | undefined
+                >
+              | null
+              | undefined;
+          }) => (
+            <div key={item._id} className="flex items-center gap-4">
+              <Checkbox
+                className="peer-absolute left-0 translate-x-2.5"
+                id={`todo-${item._id}`}
+                // checked={item.completed} // optional: bind to backend state
+                // onCheckedChange={(checked) => handleToggleComplete(item._id, checked)}
+              />
+              <label
+                htmlFor={`todo-${item._id}`}
+                className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                {item.title}
+              </label>
+
+              <Button
+                className="ml-auto h-8 w-8"
+                size="icon"
+                variant="outline"
+                // onClick={() => handleDelete(item._id)}
+              >
+                <TrashIcon className="h-4 w-4" />
+                <span className="sr-only">Delete task</span>
+              </Button>
+
+              <Button
+                className="h-8 w-8"
+                size="icon"
+                variant="outline"
+                // onClick={() => handleUpdate(item)}
+              >
+                ✏️
+                <span className="sr-only">Edit task</span>
+              </Button>
+            </div>
+          )
+        )}
       </CardContent>
-      <CardFooter className="gap-4">
-        <form className="flex w-full">
-          <Input
-            className="rounded-none border-0 border-gray-200 dark:border-gray-800 shadow-none flex-1"
-            placeholder="Add a new task"
-            type="text"
-          />
-          <Button type="submit">Add</Button>
-        </form>
-      </CardFooter>
+      <FormTodo />
+      <CardFooter className="gap-4"></CardFooter>
     </Card>
   );
 };
